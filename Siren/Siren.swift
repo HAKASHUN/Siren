@@ -381,7 +381,12 @@ private extension Siren {
     }
     
     func showAlert() {
-        
+      
+        if let updaterWindow = updaterWindow {
+          updaterWindow.hidden = false
+          return
+        }
+      
         let updateAvailableMessage = NSBundle().localizedString("Update Available", forceLanguageLocalization: forceLanguageLocalization)
         let newVersionMessage = localizedNewVersionMessage()
 
