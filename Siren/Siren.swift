@@ -478,8 +478,8 @@ private extension Siren {
         var newVersionExists = false
         
         if let currentInstalledVersion = currentInstalledVersion, currentAppStoreVersion = currentAppStoreVersion {
-            if (currentInstalledVersion.compare(currentAppStoreVersion, options: .NumericSearch) == NSComparisonResult.OrderedAscending) {
-                newVersionExists = true
+            if (formatVersionString(currentInstalledVersion).compare(formatVersionString(currentAppStoreVersion), options: .NumericSearch) == NSComparisonResult.OrderedAscending) {
+              newVersionExists = true
             }
         }
         
@@ -493,6 +493,10 @@ private extension Siren {
             NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
+  
+    func formatVersionString(versionString: String) -> String {
+      return String(versionString.characters.split{ $0 == " " }[0])
+    }
     
     func setAlertType() -> SirenAlertType {
         
@@ -500,9 +504,9 @@ private extension Siren {
             return .Option
         }
         
-        let oldVersion = (currentInstalledVersion).characters.split {$0 == "."}.map { String($0) }.map {Int($0) ?? 0}
-        let newVersion = (currentAppStoreVersion).characters.split {$0 == "."}.map { String($0) }.map {Int($0) ?? 0}
-        
+        let oldVersion = (formatVersionString(currentInstalledVersion)).characters.split {$0 == "."}.map { String($0) }.map {Int($0) ?? 0}
+        let newVersion = (formatVersionString(currentAppStoreVersion)).characters.split {$0 == "."}.map { String($0) }.map {Int($0) ?? 0}
+      
         if 2...4 ~= oldVersion.count && oldVersion.count == newVersion.count {
             if newVersion[0] > oldVersion[0] { // A.b.c.d
                 alertType = majorUpdateAlertType
